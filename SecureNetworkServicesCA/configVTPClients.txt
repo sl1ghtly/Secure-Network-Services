@@ -1,0 +1,117 @@
+-- for important switches
+en
+conf t
+vtp domain coronafb
+vtp password secret
+vtp mode client
+interface range g0/1-g9/1
+switchport mode trunk
+switchport trunk allowed vlan 11,22,33,44,55,66
+exit
+exit
+exit
+copy run start
+
+en
+
+-- for switches with pcs
+en
+conf t
+interface range g0/1-g0/2
+switchport mode trunk
+switchport trunk allowed vlan 22
+exit
+exit
+copy run start
+
+en
+
+-- for switches with pcs
+en
+conf t
+interface range Fa0/1-24
+description "VLAN 11 - Medical Research"
+switchport mode access
+switchport access vlan 11
+exit
+exit
+exit
+copy run start
+
+-- erm
+en
+conf t
+int range Fa0/23-24 or int Fa0/24
+switchport mode trunk
+switchport trunk allowed vlan 11,22,33,44,55,66
+exit
+exit
+copy run start
+
+en
+
+-- for other switches that can't go past vtp
+en
+conf t
+vtp domain coronafb
+vtp password secret
+vtp mode client
+vtp version 2
+interface range g0/1-g9/1
+switchport mode trunk
+switchport trunk allowed vlan 11,22,33,44,55,66
+exit
+exit
+exit
+copy run start
+
+en
+
+-- create vlans for server
+en
+conf t
+vtp domain coronafb
+vtp password secret
+vtp mode server
+vtp version 2
+vlan 11
+name MEDICAL
+vlan 22
+name MARKETING
+vlan 33
+name ACCOUNTS
+vlan 44
+name TECHNICAL
+vlan 55
+name MANAAGERS
+vlan 66
+name RECEPTIONISTS
+exit
+int vlan 11
+description VLAN 11
+ip address 172.16.0.2 255.255.255.0
+int vlan 22
+description VLAN 22
+ip address 172.16.1.2 255.255.255.224
+int vlan 33
+description VLAN 33
+ip address 172.16.0.34 255.255.255.240
+int vlan 44
+description VLAN 44
+ip address 172.16.0.50 255.255.255.240
+int vlan 55
+description VLAN 55
+ip address 172.16.0.66 255.255.255.240
+int vlan 66
+description VLAN 66
+ip address 172.16.0.82 255.255.255.240
+exit
+interface range g0/1-g1/1
+switchport mode trunk
+switchport trunk allowed vlan 11,22,33,44,55,66
+exit
+exit
+exit
+copy run start
+
+en

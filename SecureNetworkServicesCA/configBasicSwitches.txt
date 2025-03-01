@@ -1,0 +1,18 @@
+en
+conf t
+enable password cisco
+enable secret class
+service password-encryption
+banner motd "Corona Fightback Solution Switch SMED7."
+line console 0
+password cisco
+login
+exit
+line vty 0 4
+password cisco
+login
+exit
+exit
+copy run start
+
+en

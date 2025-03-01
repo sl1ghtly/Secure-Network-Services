@@ -1,0 +1,10 @@
+en
+conf t
+int range fa0/1-24
+spanning-tree portfast
+exit
+
+exit
+copy run start
+
+en

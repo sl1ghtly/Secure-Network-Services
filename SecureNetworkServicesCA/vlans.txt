@@ -1,0 +1,93 @@
+-- for vtp-server on marketing
+
+en
+conf t
+vtp domain coronafb
+vtp password secret
+vtp mode server
+vtp version 2
+
+vlan 22
+name MARKETING
+exit
+
+int VLAN 22
+description VLAN 22 - MARKETING
+ip address 172.16.1.2 255.255.255.224
+ip default-gateway 172.16.1.1
+
+int g0/2
+switchport mode trunk
+switchport trunk allowed vlan 1,22
+exit
+
+exit
+
+copy run start
+
+en
+
+-- for vtp-client on marketing
+
+en
+conf t
+vtp domain coronafb
+vtp password secret
+vtp mode client
+
+int g0/2
+switchport mode trunk
+switchport trunk allowed vlan 1,22
+exit
+
+exit
+
+copy run start
+
+en
+
+
+-- for switches with pcs
+
+en
+conf t
+interface range Fa0/1-24
+description "VLAN 22 - Marketing"
+switchport mode access
+switchport access vlan 22
+exit
+
+exit
+
+copy run start
+
+en
+
+-- for switches with servers
+
+en
+conf t
+interface range Fa0/1-23
+description "VLAN 22 - Marketing"
+switchport mode access
+switchport access vlan 22
+exit
+
+exit
+
+copy run start
+
+en
+
+-- re-enable porfast on them all instantly because it wipes it if it's set beforehand
+
+en
+conf t
+int range fa0/1-24
+spanning-tree portfast
+exit
+
+exit
+copy run start
+
+en
